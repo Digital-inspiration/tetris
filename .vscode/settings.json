@@ -1,0 +1,27 @@
+{
+  "python.linting.pylintEnabled": true,
+  "python.linting.pylintArgs": ["--extension-pkg-whitelist=pygame"],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "python.formatting.provider": "none",
+  "editor.fontSize": 14,
+  "workbench.colorCustomizations": {
+    "editorLineNumber.foreground": "#00ff00",
+    "titleBar.activeBackground": "#e038c4",
+    "tab.activeBackground": "#206a7c"
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Python: Current File",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceFolder}/main.py",
+        "console": "integratedTerminal"
+      }
+    ],
+    "compounds": []
+  }
+}
