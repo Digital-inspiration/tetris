@@ -1,14 +1,13 @@
-from settings import *
+from os.path import join
 from random import choice
 from sys import exit
-from os.path import join
 
+from settings import *
 from timer import Timer
 
 
 class Game:
     def __init__(self, get_next_shape, update_score):
-
         # general
         self.surface = pygame.Surface((GAME_WIDTH, GAME_HEIGHT))
         self.display_surface = pygame.display.get_surface()
@@ -16,7 +15,7 @@ class Game:
         self.rect = self.surface.get_rect(topleft=(PADDING, PADDING))
         self.sprite_group = pygame.sprite.Group()
 
-        #game connection
+        # game connection
         self.get_next_shape = get_next_shape
         self.update_score = update_score
 
@@ -44,22 +43,21 @@ class Game:
         self.down_speed_faster = self.down_speed * 0.3
         self.down_pressed = False
         self.timers = {
-            'vertical_move': Timer(self.down_speed, True, self.move_down),
-            'horizontal_move': Timer(MOVE_WAIT_TIME),
-            'rotate': Timer(ROTATE_WAIT_TIME),
+            "vertical_move": Timer(self.down_speed, True, self.move_down),
+            "horizontal_move": Timer(MOVE_WAIT_TIME),
+            "rotate": Timer(ROTATE_WAIT_TIME),
         }
-        self.timers['vertical_move'].activate()
+        self.timers["vertical_move"].activate()
 
         # score
         self.current_level = 1
         self.current_score = 0
         self.current_lines = 0
 
-        #audio
+        # audio
         self.landing_sound = pygame.mixer.Sound(join("sound", "landing.wav"))
         self.landing_sound.set_volume(0.06)
-        
-        
+
     def calculate_score(self, num_lines):
         self.current_lines += num_lines
         self.current_score += SCORE_DATA[num_lines] * self.current_level
@@ -69,17 +67,17 @@ class Game:
             self.current_level += 1
             self.down_speed *= 0.75
             self.down_speed_faster = self.down_speed * 0.3
-            self.timers['vertical_move'].duration = self.down_speed
+            self.timers["vertical_move"].duration = self.down_speed
 
         self.update_score(self.current_lines, self.current_score, self.current_level)
 
     def check_game_over(self):
         for block in self.tetromino.blocks:
             if block.pos.y < 0:
-                #todo show game over screen and show score
+                # todo show game over screen and show score
                 exit()
-    def create_new_tetromino(self):
 
+    def create_new_tetromino(self):
         self.landing_sound.play()
         self.check_game_over()
         self.check_finished_rows()
@@ -132,14 +130,14 @@ class Game:
 
         # check for the down speedup
         if not self.down_pressed and keys[pygame.K_DOWN]:
-                self.down_pressed = True
-                # print('down pressed')
-                self.timers['vertical_move'].duration = self.down_speed_faster
+            self.down_pressed = True
+            # print('down pressed')
+            self.timers["vertical_move"].duration = self.down_speed_faster
 
         if self.down_pressed and not keys[pygame.K_DOWN]:
-                self.down_pressed = False
-                # print('down released')
-                self.timers['vertical_move'].duration = self.down_speed
+            self.down_pressed = False
+            # print('down released')
+            self.timers["vertical_move"].duration = self.down_speed
 
     def check_finished_rows(self):
         # get the full row indexes
@@ -150,7 +148,6 @@ class Game:
 
         if delete_rows:
             for delete_row in delete_rows:
-                
                 # delete the full rows
                 for block in self.field_data[delete_row]:
                     block.kill()
@@ -164,8 +161,8 @@ class Game:
             self.field_data = [[0 for x in range(COLUMNS)] for y in range(ROWS)]
             for block in self.sprite_group:
                 self.field_data[int(block.pos.y)][int(block.pos.x)] = block
-            
-            #check score
+
+            # check score
             self.calculate_score(len(delete_rows))
 
     def run(self):
